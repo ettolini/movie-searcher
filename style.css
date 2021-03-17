@@ -9,3 +9,8 @@
   display: block;
   margin: 1rem;
 }
+
+#loading {
+  visibility: hidden;
+  /* visibility: visible; */
+}
