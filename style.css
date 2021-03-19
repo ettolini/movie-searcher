@@ -12,16 +12,14 @@
 
 #loading {
   visibility: hidden;
-  /* visibility: visible; */
+  display: block;
+  margin: 0 auto;
+  width: 10rem;
 }
 
 #display {
   display: flex;
   justify-content: center;
-}
-
-#loading {
-  margin: 0 auto;
 }
 
 ul {

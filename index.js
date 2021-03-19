@@ -7,7 +7,7 @@ const ul = document.createElement("ul");
 const title = document.createElement("li");
 const runTime = document.createElement("li");
 
-function getValue() {
+function handleClick() {
   if (input.value === "") console.log("You haven't entered anything.");
   else {
     loading.style.visibility = "visible";
@@ -28,4 +28,8 @@ function getValue() {
         loading.style.visibility = "hidden";
       });
   }
+}
+
+function handleEnter(event) {
+  if (event.which === 13) handleClick();
 }
