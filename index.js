@@ -1,23 +1,63 @@
-const input = document.getElementById("input");
-const button = document.getElementById("searchButton");
+const searchBar = document.getElementById("searchBar");
+const searchButton = document.getElementById("searchButton");
 const display = document.getElementById("display");
 const loading = document.getElementById("loading");
+
+searchBar.onkeyup = handleEnter;
+searchButton.onclick = handleClick;
 
 const ul = document.createElement("ul");
 const title = document.createElement("li");
 const runTime = document.createElement("li");
 const plot = document.createElement("li");
 
+const peliculaFavorita = parent.Xrm.Page.getAttribute(
+  "custom_peliculafavorita"
+);
+const peliculaFavoritaId = parent.Xrm.Page.getAttribute(
+  "custom_peliculafavoritaid"
+);
+
+const peliculaFavoritaIdValue = peliculaFavoritaId.getValue();
+if (peliculaFavoritaIdValue) {
+  fetchURL = `https://www.omdbapi.com/?i=${peliculaFavoritaIdValue}`;
+  fetchURL += "&apikey=d54c9527";
+}
+
+fetch(fetchURL)
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.Title === undefined)
+      console.log("We couldn't find the entered movie :c");
+    else {
+      title.innerHTML = data.Title;
+      runTime.innerHTML = data.Runtime;
+      plot.innerHTML = data.Plot;
+
+      ul.appendChild(title);
+      ul.appendChild(runTime);
+      ul.appendChild(plot);
+      display.appendChild(ul);
+    }
+    loading.style.visibility = "hidden";
+    searchButton.disabled = false;
+  })
+  .catch((error) => console.error(error));
+
+function handleApi() {}
+
 function handleClick() {
-  if (input.value === "") console.log("You haven't entered anything.");
-  else {
-    if (input.value === title.innerHTML)
+  try {
+    if (searchBar.value === title.innerHTML)
       console.log("That movie's info is already being displayed.");
     else {
-      button.disabled = true;
+      searchButton.disabled = true;
       loading.style.visibility = "visible";
 
-      fetch("https://www.omdbapi.com/?t=" + input.value + "&apikey=d54c9527")
+      let fetchURL = "https://www.omdbapi.com/?t=" + searchBar.value;
+      fetchURL += "&apikey=d54c9527";
+
+      fetch(fetchURL)
         .then((response) => response.json())
         .then((data) => {
           if (data.Title === undefined)
@@ -25,7 +65,10 @@ function handleClick() {
           else {
             title.innerHTML = data.Title;
             runTime.innerHTML = data.Runtime;
-            plot.innerHTML = data.Plot;
+            plot.innerHTML = "Me gusta comer arepa";
+
+            peliculaFavorita.setValue(data.Title);
+            peliculaFavoritaId.setValue(data.imdbID);
 
             ul.appendChild(title);
             ul.appendChild(runTime);
@@ -33,12 +76,22 @@ function handleClick() {
             display.appendChild(ul);
           }
           loading.style.visibility = "hidden";
-          button.disabled = false;
-        });
+          searchButton.disabled = false;
+        })
+        .catch((error) => console.error(error));
     }
+    if (searchBar.value === "") console.log("You haven't entered anything.");
+    else {
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
 function handleEnter(event) {
-  if (event.which === 13) handleClick();
+  try {
+    if (event.which === 13) handleClick();
+  } catch (error) {
+    console.log(error);
+  }
 }
