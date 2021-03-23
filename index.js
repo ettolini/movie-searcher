@@ -24,27 +24,32 @@ if (peliculaFavoritaIdValue) {
   fetchURL += "&apikey=d54c9527";
 }
 
-fetch(fetchURL)
-  .then((response) => response.json())
-  .then((data) => {
-    if (data.Title === undefined)
-      console.log("We couldn't find the entered movie :c");
-    else {
-      title.innerHTML = data.Title;
-      runTime.innerHTML = data.Runtime;
-      plot.innerHTML = data.Plot;
+handleApi(fetchURL);
 
-      ul.appendChild(title);
-      ul.appendChild(runTime);
-      ul.appendChild(plot);
-      display.appendChild(ul);
-    }
-    loading.style.visibility = "hidden";
-    searchButton.disabled = false;
-  })
-  .catch((error) => console.error(error));
+function handleApi(fetchURL) {
+  fetch(fetchURL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.Title === undefined)
+        console.log("We couldn't find the entered movie :c");
+      else {
+        title.innerHTML = data.Title;
+        runTime.innerHTML = data.Runtime;
+        plot.innerHTML = data.Plot;
 
-function handleApi() {}
+        peliculaFavorita.setValue(data.Title);
+        peliculaFavoritaId.setValue(data.imdbID);
+
+        ul.appendChild(title);
+        ul.appendChild(runTime);
+        ul.appendChild(plot);
+        display.appendChild(ul);
+      }
+      loading.style.visibility = "hidden";
+      searchButton.disabled = false;
+    })
+    .catch((error) => console.error(error));
+}
 
 function handleClick() {
   try {
@@ -57,28 +62,7 @@ function handleClick() {
       let fetchURL = "https://www.omdbapi.com/?t=" + searchBar.value;
       fetchURL += "&apikey=d54c9527";
 
-      fetch(fetchURL)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.Title === undefined)
-            console.log("We couldn't find the entered movie :c");
-          else {
-            title.innerHTML = data.Title;
-            runTime.innerHTML = data.Runtime;
-            plot.innerHTML = "Me gusta comer arepa";
-
-            peliculaFavorita.setValue(data.Title);
-            peliculaFavoritaId.setValue(data.imdbID);
-
-            ul.appendChild(title);
-            ul.appendChild(runTime);
-            ul.appendChild(plot);
-            display.appendChild(ul);
-          }
-          loading.style.visibility = "hidden";
-          searchButton.disabled = false;
-        })
-        .catch((error) => console.error(error));
+      handleApi(fetchURL);
     }
     if (searchBar.value === "") console.log("You haven't entered anything.");
     else {
