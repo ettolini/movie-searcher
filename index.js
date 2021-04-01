@@ -1,7 +1,10 @@
 const input = document.getElementById("input");
-const button = document.getElementById("searchButton");
+const searchButton = document.getElementById("searchButton");
 const display = document.getElementById("display");
 const loading = document.getElementById("loading");
+
+searchButton.onclick = handleClick;
+input.onkeyup = handleEnter;
 
 const ul = document.createElement("ul");
 const title = document.createElement("li");
@@ -14,7 +17,7 @@ function handleClick() {
     if (input.value === title.innerHTML)
       console.log("That movie's info is already being displayed.");
     else {
-      button.disabled = true;
+      searchButton.disabled = true;
       loading.style.visibility = "visible";
 
       fetch("https://www.omdbapi.com/?t=" + input.value + "&apikey=d54c9527")
@@ -33,7 +36,7 @@ function handleClick() {
             display.appendChild(ul);
           }
           loading.style.visibility = "hidden";
-          button.disabled = false;
+          searchButton.disabled = false;
         });
     }
   }
